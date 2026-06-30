@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendre | MarketPro</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- HEADER SIMPLE -->
+
+    <header class="header">
+
+        <div class="top-header">
+
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-store"></i> MarketPro
+                </a>
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a class="active" href="vendre.html">Vendre</a></li>
+                    <li><a href="publier.html">Publier</a></li>
+                    <li><a href="produit.html">Produit</a></li>
+                    <li><a href="likes.html">Likes</a></li>
+                    <li><a href="info.html">Info</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+    <!-- PAGE VENDRE -->
+
+    <section class="sell-page">
+
+        <h1>🛍️ Vendre un produit</h1>
+
+        <p>Ajoute ton produit et commence à vendre immédiatement.</p>
+
+        <form id="form-vendre">
+
+            <input type="text" id="productName" placeholder="Nom du produit" required>
+
+            <input type="number" id="productPrice" placeholder="Prix" required>
+
+            <input type="text" id="productImage" placeholder="URL image (ou upload)">
+
+            <input type="file" id="productImageFile">
+
+            <img id="previewImage" width="150" style="margin-top:10px;border-radius:10px;">
+
+            <button type="submit">Ajouter le produit</button>
+
+        </form>
+
+    </section>
+
+    <section class="sell-listing">
+        <h2>Produits à vendre</h2>
+        <div id="sellProducts" class="product-grid"></div>
+    </section>
+        <!-- STYLE LOCAL SIMPLE (OPTIONNEL SI PAS DANS CSS) -->
+
+    <style>
+        .sell-page {
+            padding: 50px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .sell-page h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .sell-page p {
+            margin-bottom: 20px;
+            color: gray;
+        }
+
+        #form-vendre {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        #form-vendre input {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+
+        #form-vendre button {
+            padding: 12px;
+            border: none;
+            background: #111;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #form-vendre button:hover {
+            background: #00c3ff;
+        }
+
+        .sell-listing {
+            padding: 0 50px 50px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .sell-listing h2 {
+            margin-bottom: 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+    </style>
+
+    <!-- SCRIPT APP -->
+    <script src="js/app.js"></script>
+    <script>
+        const sellProducts = document.getElementById("sellProducts");
+
+        function renderSellProducts() {
+            if (!sellProducts) return;
+            sellProducts.innerHTML = products.slice(0, 10).map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.price} €</p>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        window.renderSellProducts = renderSellProducts;
+        renderSellProducts();
+    </script>
+
+</body>
+</html>

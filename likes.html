@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Likes | MarketPro</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="top-header">
+
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-store"></i> MarketPro
+                </a>
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="vendre.html">Vendre</a></li>
+                    <li><a href="publier.html">Publier</a></li>
+                    <li><a href="produit.html">Produit</a></li>
+                    <li><a class="active" href="likes.html">Likes</a></li>
+                    <li><a href="info.html">Info</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+    <!-- PAGE LIKES -->
+
+    <section class="likes-page">
+
+        <h1>❤️ Produits likés</h1>
+
+        <p>Retrouve ici tous les produits que tu as aimés.</p>
+
+        <div id="likesContainer"></div>
+
+        <h2 class="more-products">Autres produits à découvrir</h2>
+        <div id="discoverProducts" class="product-grid"></div>
+
+    </section>
+        <!-- SCRIPT -->
+
+    <script src="js/app.js"></script>
+
+    <!-- STYLE -->
+
+    <style>
+
+        .likes-page {
+            padding: 50px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .likes-page h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .likes-page p {
+            color: gray;
+            margin-bottom: 20px;
+        }
+
+        #likesContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .like-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            animation: fadeUp 0.4s ease;
+        }
+
+        .like-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .like-card h3 {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .like-card p {
+            color: #00c3ff;
+            font-weight: bold;
+        }
+
+        .more-products {
+            margin-top: 30px;
+            font-size: 24px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+    </style>
+
+    <!-- RENDER LIKES -->
+
+    <script>
+
+        const container = document.getElementById("likesContainer");
+        const discoverContainer = document.getElementById("discoverProducts");
+
+        function renderLikes() {
+
+            let liked = products.filter(p => likedProducts.has(p.id));
+
+            container.innerHTML = "";
+
+            if (liked.length === 0) {
+                container.innerHTML = "<p>Aucun produit liké.</p>";
+            } else {
+                liked.forEach(p => {
+
+                    container.innerHTML += `
+                        <div class="like-card">
+
+                            <img src="${p.image}" />
+
+                            <h3>${p.name}</h3>
+
+                            <p>${p.price} €</p>
+
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function renderDiscoverProducts() {
+            if (!discoverContainer) return;
+            discoverContainer.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <img src="${p.image}" alt="${p.name}">
+                    <div class="product-info">
+                        <h3>${p.name}</h3>
+                        <p>${p.price} €</p>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        window.renderDiscoverProducts = renderDiscoverProducts;
+        renderLikes();
+        renderDiscoverProducts();
+
+    </script>
+
+</body>
+</html>

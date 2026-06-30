@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publier | MarketPro</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="top-header">
+
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-store"></i> MarketPro
+                </a>
+            </div>
+
+            <nav class="navbar">
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="vendre.html">Vendre</a></li>
+                    <li><a class="active" href="publier.html">Publier</a></li>
+                    <li><a href="produit.html">Produit</a></li>
+                    <li><a href="likes.html">Likes</a></li>
+                    <li><a href="info.html">Info</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </header>
+
+    <!-- PAGE PUBLIER -->
+
+    <section class="publish-page">
+
+        <h1>📸 Publier un média</h1>
+
+        <p>Ajoute une image ou une vidéo et partage-la.</p>
+
+        <div class="upload-box">
+
+            <input type="file" id="mediaFile" accept="image/*,video/*">
+
+            <input type="text" id="mediaTitle" placeholder="Titre du post">
+
+            <button onclick="publishMedia()">Publier</button>
+
+        </div>
+
+        <div id="mediaPreview"></div>
+
+    </section>
+        <!-- SCRIPT GLOBAL -->
+
+    <script src="js/app.js"></script>
+
+    <!-- STYLE -->
+
+    <style>
+
+        .publish-page {
+            padding: 50px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .publish-page h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .publish-page p {
+            color: gray;
+            margin-bottom: 20px;
+        }
+
+        .upload-box {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .upload-box input[type="text"],
+        .upload-box input[type="file"] {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .upload-box button {
+            padding: 12px;
+            border: none;
+            background: #111;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .upload-box button:hover {
+            background: #00c3ff;
+        }
+
+        #mediaPreview {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .media-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            animation: fadeUp 0.4s ease;
+        }
+
+        .media-card img,
+        .media-card video {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        .media-card h3 {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+    </style>
+
+    <!-- JS UPLOAD -->
+
+    <script>
+
+        const preview = document.getElementById("mediaPreview");
+
+        let mediaList = [];
+
+        function publishMedia() {
+
+            const fileInput = document.getElementById("mediaFile");
+            const titleInput = document.getElementById("mediaTitle");
+
+            const file = fileInput.files[0];
+            const title = titleInput.value || "Sans titre";
+
+            if (!file) {
+                alert("Sélectionne un fichier !");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                const dataUrl = e.target.result;
+
+                mediaList.push({
+                    title: title,
+                    file: dataUrl,
+                    type: file.type
+                });
+
+                renderMedia();
+
+                fileInput.value = "";
+                titleInput.value = "";
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function renderMedia() {
+
+            preview.innerHTML = "";
+
+            mediaList.forEach(m => {
+
+                preview.innerHTML += `
+                    <div class="media-card">
+
+                        ${
+                            m.type.startsWith("video")
+                            ? `<video controls src="${m.file}"></video>`
+                            : `<img src="${m.file}" />`
+                        }
+
+                        <h3>${m.title}</h3>
+
+                    </div>
+                `;
+            });
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+@media (max-width: 768px) {
+  nav {
+    justify-content: center;
+  }
+
+  main {
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+  }
+}
