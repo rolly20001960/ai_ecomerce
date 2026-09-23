@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f97316">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/images/marketpro-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/pwa.js"></script>
+  <title>Time Run | MarketPro</title>
+  <style>
+    :root { color-scheme: dark; }
+    .race-page { width: min(100% - 2rem, 760px); margin: 2rem auto; }
+    .race-card { background: #171717; border: 1px solid #f97316; border-radius: 20px; padding: clamp(1rem, 4vw, 2rem); text-align: center; box-shadow: 0 12px 32px #0008; }
+    .race-card h1 { color: #f97316; margin-top: 0; }
+    .race-stats { display: flex; justify-content: center; gap: clamp(1rem, 8vw, 4rem); margin: 1rem 0; font-weight: 700; }
+    .race-stats span { display: block; color: #f97316; font-size: 1.4rem; }
+    #road { display: block; width: min(100%, 420px); height: auto; aspect-ratio: 3 / 5; margin: 0 auto; border: 4px solid #f97316; border-radius: 14px; background: #252525; touch-action: none; }
+    .race-controls { display: flex; justify-content: center; gap: .75rem; margin-top: 1rem; }
+    .race-controls button, .race-link { border: 0; border-radius: 10px; padding: .8rem 1rem; background: #f97316; color: #111; font-weight: 800; cursor: pointer; text-decoration: none; }
+    .race-controls button:active { transform: scale(.96); }
+    @media (max-width: 480px) { .race-page { margin: 1rem auto; } .race-controls button { min-width: 44%; } }
+  </style>
+</head>
+<body>
+  <header class="header"><div class="top-header"><div class="logo"><a href="index.html"><i class="fa-solid fa-store"></i> MarketPro</a></div><a href="jeu.html">Tous les jeux</a></div></header>
+  <main class="race-page"><section class="race-card" aria-labelledby="race-title">
+    <h1 id="race-title">Time Run</h1>
+    <p>Évite les voitures et bats ton meilleur temps.</p>
+    <div class="race-stats" aria-live="polite"><div>Temps<span id="time">0.0 s</span></div><div>Record<span id="best">0.0 s</span></div></div>
+    <canvas id="road" width="360" height="600" aria-label="Jeu de voiture Time Run"></canvas>
+    <div class="race-controls"><button id="start" type="button">Commencer</button><button id="left" type="button" aria-label="Aller à gauche">Gauche</button><button id="right" type="button" aria-label="Aller à droite">Droite</button></div>
+    <p><a class="race-link" href="jeu.html">Jouer à Snake</a></p><small>Utilise les flèches, A/D ou les boutons tactiles.</small>
+  </section></main>
+  <script>
+    const canvas = document.querySelector('#road'), ctx = canvas.getContext('2d'), timeEl = document.querySelector('#time'), bestEl = document.querySelector('#best');
+    const lanes = [75, 180, 285]; let player, enemies, running = false, startedAt = 0, last = 0, animation;
+    let best = Number(sessionStorage.getItem('marketpro-time-run-best') || 0); bestEl.textContent = best ? `${best.toFixed(1)} s` : '—';
+    function reset() { player = { lane: 1, y: 500 }; enemies = []; startedAt = performance.now(); last = startedAt; running = true; cancelAnimationFrame(animation); animation = requestAnimationFrame(loop); }
+    function move(step) { if (running) player.lane = Math.max(0, Math.min(2, player.lane + step)); }
+    function drawCar(x, y, color) { ctx.fillStyle = color; ctx.fillRect(x - 25, y, 50, 74); ctx.fillStyle = '#111'; ctx.fillRect(x - 17, y + 10, 34, 18); ctx.fillStyle = '#ddd'; ctx.fillRect(x - 20, y + 59, 10, 7); ctx.fillRect(x + 10, y + 59, 10, 7); }
+    function loop(now) { if (!running) return; const dt = Math.min(40, now - last); last = now; const elapsed = (now - startedAt) / 1000; timeEl.textContent = `${elapsed.toFixed(1)} s`; ctx.fillStyle = '#252525'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = '#777'; ctx.setLineDash([28, 24]); ctx.lineWidth = 4; [125, 235].forEach(x => { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 600); ctx.stroke(); }); ctx.setLineDash([]); if (!enemies.length || enemies[enemies.length - 1].y > 150) enemies.push({ lane: Math.floor(Math.random() * 3), y: -80, speed: 2.8 + elapsed * .08 }); enemies.forEach(enemy => { enemy.y += enemy.speed * dt; drawCar(lanes[enemy.lane], enemy.y, '#ef4444'); }); drawCar(lanes[player.lane], player.y, '#f97316'); const hit = enemies.some(e => e.lane === player.lane && e.y + 74 > player.y + 8 && e.y < player.y + 66); if (hit) { running = false; const finalTime = Number(elapsed.toFixed(1)); if (finalTime > best) { best = finalTime; sessionStorage.setItem('marketpro-time-run-best', best); bestEl.textContent = `${best.toFixed(1)} s`; } timeEl.textContent = `${finalTime.toFixed(1)} s — perdu`; return; } enemies = enemies.filter(e => e.y < 650); animation = requestAnimationFrame(loop); }
+    document.querySelector('#start').addEventListener('click', reset); document.querySelector('#left').addEventListener('click', () => move(-1)); document.querySelector('#right').addEventListener('click', () => move(1)); addEventListener('keydown', event => { if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') move(-1); if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') move(1); if (event.key === ' ' && !running) reset(); });
+  </script>
+</body>
+</html>
