@@ -1,0 +1,14 @@
+{
+  "name": "MarketPro",
+  "short_name": "MarketPro",
+  "description": "Votre marketplace moderne, rapide et mobile.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#f97316",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "assets/images/marketpro-icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
