@@ -33,6 +33,12 @@ body {
     color: #111;
 }
 
+.logo a i,
+.header-icons a:hover,
+.navbar ul li a.active {
+    color: #f97316;
+}
+
 .search-box {
     display: flex;
     border: 1px solid #ddd;
@@ -94,7 +100,7 @@ body {
 }
 
 .navbar ul li a:hover {
-    color: #00c3ff;
+    color: #f97316;
 }
 
 /* =========================
@@ -129,7 +135,7 @@ body {
 }
 
 .btn {
-    background: #00c3ff;
+    background: #f97316;
     padding: 12px 20px;
     color: white;
     text-decoration: none;
@@ -249,7 +255,7 @@ body {
 }
 
 .price {
-    color: #00c3ff;
+    color: #f97316;
     font-weight: bold;
 }
 
@@ -282,7 +288,7 @@ body {
 }
 
 .buy {
-    background: #00c3ff;
+    background: #f97316;
     color: white;
 }
 
@@ -381,7 +387,7 @@ body {
 }
 
 .footer-box a:hover {
-    color: #00c3ff;
+    color: #f97316;
     transform: translateX(5px);
 }
 
