@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administration | MarketPro</title>
+  <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .admin-page{max-width:1180px;margin:auto;padding:42px 24px}.admin-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:28px}.admin-card{background:#fff;border-radius:18px;padding:22px;box-shadow:0 8px 28px #1111110d;margin-bottom:20px}.admin-table{width:100%;border-collapse:collapse}.admin-table th,.admin-table td{text-align:left;padding:14px 10px;border-bottom:1px solid #edf0f5}.badge{padding:5px 10px;border-radius:999px;background:#e8f7ff;color:#05749d;font-size:12px;font-weight:700}.danger{background:#fff1f1;color:#b42318}.notice{padding:14px;border-radius:12px;background:#fff8e6;color:#855b00}.btn-admin{border:0;border-radius:10px;padding:10px 14px;background:#111;color:#fff;cursor:pointer}.btn-admin:hover{background:#00a9dc}
+  </style>
+</head>
+<body>
+<header class="header"><div class="top-header"><div class="logo"><a href="index.html">MarketPro</a></div><a href="index.html">Retour à la boutique</a></div></header>
+<main class="admin-page"><div class="admin-head"><div><p style="color:#00a9dc;font-weight:700">ESPACE SÉCURISÉ</p><h1>Gestion des utilisateurs</h1><p id="adminIdentity">Vérification de votre session…</p></div><button class="btn-admin" id="logout">Se déconnecter</button></div><section class="admin-card"><div id="notice" class="notice">Chargement…</div><div style="overflow:auto"><table class="admin-table"><thead><tr><th>Utilisateur</th><th>Rôle</th><th>Inscription</th><th>Action</th></tr></thead><tbody id="users"></tbody></table></div></section></main>
+<script type="module">
+import { getProfile } from './js/supabase.js';
+const notice=document.querySelector('#notice'), users=document.querySelector('#users');
+const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+async function main(){try{const {supabase,user,profile}=await getProfile();if(!user||profile?.role!=='admin'){notice.textContent='Accès refusé. Connectez-vous avec un compte administrateur.';setTimeout(()=>location.href='auth.html?next=admin.html',1400);return}document.querySelector('#adminIdentity').textContent=`Connecté : ${user.email}`;notice.remove();const {data,error}=await supabase.from('profiles').select('id,full_name,role,created_at').order('created_at',{ascending:false});if(error)throw error;users.innerHTML=(data||[]).map((item)=>`<tr><td>${escapeHtml(item.full_name||'Sans nom')}<br><small>${escapeHtml(item.id)}</small></td><td><span class="badge ${item.role==='admin'?'':'danger'}">${escapeHtml(item.role)}</span></td><td>${new Date(item.created_at).toLocaleDateString('fr-FR')}</td><td>${item.id===user.id?'Compte actuel':`<button class="btn-admin role-toggle" data-id="${escapeHtml(item.id)}" data-role="${item.role}">${item.role==='admin'?'Retirer admin':'Rendre admin'}</button>`}</td></tr>`).join('');document.querySelectorAll('.role-toggle').forEach((button)=>button.addEventListener('click',async()=>{const nextRole=button.dataset.role==='admin'?'customer':'admin';button.disabled=true;const {error:updateError}=await supabase.from('profiles').update({role:nextRole}).eq('id',button.dataset.id);if(updateError){notice.textContent='Modification impossible.';button.disabled=false;return}location.reload()}))}catch(error){notice.textContent='Impossible de charger les utilisateurs. Vérifiez la configuration Supabase.';console.error('[v0] admin load error',error)}}
+document.querySelector('#logout').onclick=async()=>{const {supabase}=await getProfile();await supabase.auth.signOut();location.href='index.html'};main();
+</script></body></html>
