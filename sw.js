@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marketpro-v1';
+const CACHE_NAME = 'marketpro-v2';
 const APP_SHELL = ['./', './index.html', './css/style.css', './css/animations.css', './css/responsive.css', './js/app.js', './assets/images/marketpro-icon.png'];
 
 self.addEventListener('install', (event) => {

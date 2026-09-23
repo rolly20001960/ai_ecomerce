@@ -1,10 +1,43 @@
 @media (max-width: 768px) {
-  nav {
-    justify-content: center;
+  .top-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .logo,
+  .header-icons {
+    flex: 1 1 auto;
+  }
+
+  .header-icons {
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  .search-box {
+    order: 3;
+    width: 100%;
+  }
+
+  .navbar {
+    overflow-x: auto;
+  }
+
+  .navbar ul {
+    justify-content: flex-start;
+    min-width: max-content;
+    padding: 0 0.5rem;
   }
 
   main {
     margin: 1.5rem auto;
     padding: 0 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .header-icons a span {
+    font-size: 0.75rem;
   }
 }
