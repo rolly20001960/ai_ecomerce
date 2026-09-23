@@ -17,10 +17,16 @@
     .race-stats { display: flex; justify-content: center; gap: clamp(1rem, 8vw, 4rem); margin: 1rem 0; font-weight: 700; }
     .race-stats span { display: block; color: #f97316; font-size: 1.4rem; }
     #road { display: block; width: min(100%, 420px); height: auto; aspect-ratio: 3 / 5; margin: 0 auto; border: 4px solid #f97316; border-radius: 14px; background: #252525; touch-action: none; }
-    .race-controls { display: flex; justify-content: center; gap: .75rem; margin-top: 1rem; }
+    .race-controls { display: flex; justify-content: center; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
     .race-controls button, .race-link { border: 0; border-radius: 10px; padding: .8rem 1rem; background: #f97316; color: #111; font-weight: 800; cursor: pointer; text-decoration: none; }
     .race-controls button:active { transform: scale(.96); }
-    @media (max-width: 480px) { .race-page { margin: 1rem auto; } .race-controls button { min-width: 44%; } }
+    @media (max-width: 480px) {
+      .race-page { width: min(100% - 1rem, 760px); margin: .5rem auto; }
+      .race-card { padding: 1rem .75rem; }
+      .race-controls { gap: .5rem; }
+      .race-controls button { flex: 1 1 42%; min-width: 0; }
+      #road { width: min(100%, 360px); }
+    }
   </style>
 </head>
 <body>
@@ -40,7 +46,7 @@
     function reset() { player = { lane: 1, y: 500 }; enemies = []; startedAt = performance.now(); last = startedAt; running = true; cancelAnimationFrame(animation); animation = requestAnimationFrame(loop); }
     function move(step) { if (running) player.lane = Math.max(0, Math.min(2, player.lane + step)); }
     function drawCar(x, y, color) { ctx.fillStyle = color; ctx.fillRect(x - 25, y, 50, 74); ctx.fillStyle = '#111'; ctx.fillRect(x - 17, y + 10, 34, 18); ctx.fillStyle = '#ddd'; ctx.fillRect(x - 20, y + 59, 10, 7); ctx.fillRect(x + 10, y + 59, 10, 7); }
-    function loop(now) { if (!running) return; const dt = Math.min(40, now - last); last = now; const elapsed = (now - startedAt) / 1000; timeEl.textContent = `${elapsed.toFixed(1)} s`; ctx.fillStyle = '#252525'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = '#777'; ctx.setLineDash([28, 24]); ctx.lineWidth = 4; [125, 235].forEach(x => { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 600); ctx.stroke(); }); ctx.setLineDash([]); if (!enemies.length || enemies[enemies.length - 1].y > 150) enemies.push({ lane: Math.floor(Math.random() * 3), y: -80, speed: 2.8 + elapsed * .08 }); enemies.forEach(enemy => { enemy.y += enemy.speed * dt; drawCar(lanes[enemy.lane], enemy.y, '#ef4444'); }); drawCar(lanes[player.lane], player.y, '#f97316'); const hit = enemies.some(e => e.lane === player.lane && e.y + 74 > player.y + 8 && e.y < player.y + 66); if (hit) { running = false; const finalTime = Number(elapsed.toFixed(1)); if (finalTime > best) { best = finalTime; sessionStorage.setItem('marketpro-time-run-best', best); bestEl.textContent = `${best.toFixed(1)} s`; } timeEl.textContent = `${finalTime.toFixed(1)} s — perdu`; return; } enemies = enemies.filter(e => e.y < 650); animation = requestAnimationFrame(loop); }
+    function loop(now) { if (!running) return; const dt = Math.min(40, now - last); last = now; const elapsed = (now - startedAt) / 1000; timeEl.textContent = `${elapsed.toFixed(1)} s`; ctx.fillStyle = '#252525'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.strokeStyle = '#777'; ctx.setLineDash([28, 24]); ctx.lineWidth = 4; [125, 235].forEach(x => { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 600); ctx.stroke(); }); ctx.setLineDash([]); if (!enemies.length || enemies[enemies.length - 1].y > 150) enemies.push({ lane: Math.floor(Math.random() * 3), y: -80, speed: 1.55 + Math.min(0.035 * elapsed, 1.25) }); enemies.forEach(enemy => { enemy.y += enemy.speed * dt; drawCar(lanes[enemy.lane], enemy.y, '#ef4444'); }); drawCar(lanes[player.lane], player.y, '#f97316'); const hit = enemies.some(e => e.lane === player.lane && e.y + 74 > player.y + 8 && e.y < player.y + 66); if (hit) { running = false; const finalTime = Number(elapsed.toFixed(1)); if (finalTime > best) { best = finalTime; sessionStorage.setItem('marketpro-time-run-best', best); bestEl.textContent = `${best.toFixed(1)} s`; } timeEl.textContent = `${finalTime.toFixed(1)} s — perdu`; return; } enemies = enemies.filter(e => e.y < 650); animation = requestAnimationFrame(loop); }
     document.querySelector('#start').addEventListener('click', reset); document.querySelector('#left').addEventListener('click', () => move(-1)); document.querySelector('#right').addEventListener('click', () => move(1)); addEventListener('keydown', event => { if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') move(-1); if (event.key === 'ArrowRight' || event.key.toLowerCase() === 'd') move(1); if (event.key === ' ' && !running) reset(); });
   </script>
 </body>
