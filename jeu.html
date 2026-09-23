@@ -1,2 +1,26 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f97316"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/images/marketpro-icon.png"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"><link rel="stylesheet" href="css/style.css"><script type="module" src="js/pwa.js"></script><title>Jeu Snake | MarketPro</title><style>main{max-width:520px;margin:32px auto;padding:24px;text-align:center}.game-card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 30px #1112}canvas{width:min(100%,400px);aspect-ratio:1;background:#111;border:4px solid #f97316;border-radius:12px;touch-action:none}.score{font-size:1.2rem;font-weight:700;margin:12px}button{border:0;border-radius:10px;padding:12px 20px;background:#f97316;color:#111;font-weight:700;cursor:pointer}</style></head><body><header class="header"><div class="top-header"><div class="logo"><a href="index.html"><i class="fa-solid fa-store"></i> MarketPro</a></div><a href="index.html">Retour à la boutique</a></div></header><main><div class="game-card"><h1>Snake MarketPro</h1><p class="score">Score : <span id="score">0</span></p><canvas id="game" width="400" height="400" aria-label="Jeu Snake"></canvas><p><button id="start">Commencer / Rejouer</button></p><p>Utilisez les flèches ou balayez l'écran.</p><p><a href="voiture.html" style="display:inline-block;border-radius:10px;padding:12px 20px;background:#f97316;color:#111;font-weight:700;text-decoration:none">Jouer à Time Run</a></p></div></main><script>const c=document.querySelector('#game'),x=c.getContext('2d'),scoreEl=document.querySelector('#score'),start=document.querySelector('#start');let snake,food,dir,score,timer;function reset(){snake=[{x:10,y:10}];food={x:15,y:10};dir={x:1,y:0};score=0;scoreEl.textContent=score;clearInterval(timer);timer=setInterval(tick,120);draw()}function tick(){const h={x:snake[0].x+dir.x,y:snake[0].y+dir.y};if(h.x<0||h.y<0||h.x>=20||h.y>=20||snake.some(s=>s.x===h.x&&s.y===h.y)){clearInterval(timer);return}snake.unshift(h);if(h.x===food.x&&h.y===food.y){score++;scoreEl.textContent=score;food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)}}else snake.pop();draw()}function draw(){x.fillStyle='#111';x.fillRect(0,0,400,400);x.fillStyle='#f97316';snake.forEach(s=>x.fillRect(s.x*20+1,s.y*20+1,18,18));x.fillStyle='#fff';x.fillRect(food.x*20+3,food.y*20+3,14,14)}addEventListener('keydown',e=>{const m={ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1},ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0}}[e.key];if(m&&!(m.x===-dir.x&&m.y===-dir.y))dir=m});start.onclick=reset;reset();</script></body></html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f97316">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/images/marketpro-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/pwa.js"></script>
+  <title>Jeux | MarketPro</title>
+  <style>
+    .games-page{width:min(100% - 2rem,960px);margin:2rem auto}.games-hero{text-align:center;margin-bottom:2rem}.games-hero h1{color:#f97316;margin-bottom:.5rem}.games-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem}.game-choice{display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;color:inherit;background:#171717;border:1px solid #f97316;border-radius:20px;padding:1.5rem;box-shadow:0 12px 32px #0008;transition:transform .2s,background .2s}.game-choice:hover,.game-choice:focus-visible{transform:translateY(-4px);background:#242424}.game-icon{display:grid;place-items:center;width:88px;height:88px;border-radius:24px;background:#f97316;color:#111;font-size:2.5rem;margin-bottom:1rem}.game-choice h2{color:#f97316;margin:.25rem 0 .5rem}.game-choice p{margin:0 0 1.25rem;color:#ddd}.play-label{margin-top:auto;background:#f97316;color:#111;border-radius:10px;padding:.75rem 1.2rem;font-weight:800}@media(max-width:600px){.games-page{margin:1rem auto}.games-grid{grid-template-columns:1fr}.game-choice{padding:1.25rem}}
+  </style>
+</head>
+<body>
+  <header class="header"><div class="top-header"><div class="logo"><a href="index.html"><i class="fa-solid fa-store"></i> MarketPro</a></div><a href="index.html">Retour à la boutique</a></div></header>
+  <main class="games-page">
+    <section class="games-hero" aria-labelledby="games-title"><h1 id="games-title">Choisis ton jeu</h1><p>Sélectionne un jeu pour ouvrir sa page et commencer à jouer.</p></section>
+    <section class="games-grid" aria-label="Jeux disponibles">
+      <a class="game-choice" href="snake.html"><span class="game-icon" aria-hidden="true"><i class="fa-solid fa-worm"></i></span><h2>Snake MarketPro</h2><p>Mange les bonus et bats ton meilleur score.</p><span class="play-label">Jouer à Snake</span></a>
+      <a class="game-choice" href="voiture.html"><span class="game-icon" aria-hidden="true">&#128663;</span><h2>Time Run</h2><p>Évite les voitures et reste sur la route le plus longtemps possible.</p><span class="play-label">Jouer à Time Run</span></a>
+    </section>
+  </main>
+</body>
+</html>
