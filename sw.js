@@ -1,9 +1,13 @@
-const CACHE_NAME = 'marketpro-v2';
-const APP_SHELL = ['./', './index.html', './css/style.css', './css/animations.css', './css/responsive.css', './js/app.js', './js/pwa.js', './assets/images/marketpro-icon.png'];
+const CACHE_NAME = 'marketpro-v3';
+const APP_SHELL = ['./', './index.html', './css/style.css', './css/animations.css', './css/responsive.css', './js/app.js', './js/pwa.js', './manifest.webmanifest', './assets/images/marketpro-icon.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
   self.skipWaiting();
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {

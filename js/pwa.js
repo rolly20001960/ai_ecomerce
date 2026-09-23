@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marketpro-v1';
+const CACHE_NAME = 'marketpro-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,6 +6,8 @@ const APP_SHELL = [
   './css/animations.css',
   './css/responsive.css',
   './js/app.js',
+  './js/pwa.js',
+  './manifest.webmanifest',
   './assets/images/marketpro-icon.png'
 ];
 
@@ -34,6 +36,12 @@ if ('serviceWorker' in navigator) {
     refreshing = true;
     window.location.reload();
   });
+
+  const checkForUpdates = () => registration.update();
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') checkForUpdates();
+  });
+  window.addEventListener('pageshow', checkForUpdates);
 }
 
 const installButton = document.querySelector('[data-install-app]');
